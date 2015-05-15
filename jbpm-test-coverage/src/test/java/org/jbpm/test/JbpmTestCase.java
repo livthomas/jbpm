@@ -26,8 +26,12 @@ import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.kie.api.runtime.KieSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class JbpmTestCase extends JbpmJUnitBaseTestCase {
+
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     public JbpmTestCase() {
         this(true);
