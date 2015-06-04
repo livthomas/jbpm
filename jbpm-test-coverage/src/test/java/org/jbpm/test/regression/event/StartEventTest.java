@@ -1,0 +1,119 @@
+/*
+ * Copyright 2015 JBoss Inc
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.jbpm.test.regression.event;
+
+import org.assertj.core.api.Assertions;
+import org.jbpm.test.JbpmTestCase;
+import org.jbpm.test.iodata.SignalObjectReport;
+import org.junit.Test;
+import org.kie.api.event.process.DefaultProcessEventListener;
+import org.kie.api.event.process.ProcessStartedEvent;
+import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.manager.audit.VariableInstanceLog;
+import org.kie.api.runtime.process.ProcessInstance;
+import org.kie.api.runtime.process.WorkflowProcessInstance;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class StartEventTest extends JbpmTestCase {
+
+    private static final String ERROR_EXCEPTION_HANDLER =
+            "org/jbpm/test/regression/event/StartEvent-errorExceptionHandler.bpmn2";
+    private static final String ERROR_EXCEPTION_HANDLER_ID =
+            "org.jbpm.test.regression.event.StartEvent-errorExceptionHandler";
+
+    private static final String ERROR_EXCEPTION_MAPPING =
+            "org/jbpm/test/regression/event/StartEvent-errorExceptionMapping.bpmn2";
+    private static final String ERROR_EXCEPTION_MAPPING_ID =
+            "org.jbpm.test.regression.event.StartEvent-errorExceptionMapping";
+
+    private static final String SIGNAL_DATA_MAPPING =
+            "org/jbpm/test/regression/event/StartEvent-signalDataMapping.bpmn2";
+
+    private static final String SIGNAL_OUTPUT_TYPE =
+            "org/jbpm/test/regression/event/StartEvent-signalOutputType.bpmn2";
+
+    /**
+     * Bug 1186015 - ErrorStartEvent is not started by default exception handler
+     *
+     * @see <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1186015">Bug 1186015</a>
+     */
+    @Test
+    public void testErrorStartEventDefaultExceptionHandler() {
+        KieSession ksession = createKSession(ERROR_EXCEPTION_HANDLER);
+        ProcessInstance pi = ksession.startProcess(ERROR_EXCEPTION_HANDLER_ID);
+
+        List<? extends VariableInstanceLog> variables = getLogService().findVariableInstances(pi.getId(),
+                "capturedException");
+        Assertions.assertThat(variables).hasSize(1);
+        Assertions.assertThat(variables.get(0).getValue()).isEqualTo("java.lang.RuntimeException: XXX");
+    }
+
+    /**
+     * Bug 1186016 - ErrorStartEvent does not capture dataOuput map
+     *
+     * @see <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1186016">Bug 1186016</a>
+     */
+    @Test
+    public void testErrorStartEventDataOutputMapping() {
+        KieSession ksession = createKSession(ERROR_EXCEPTION_MAPPING);
+        ProcessInstance pi = ksession.startProcess(ERROR_EXCEPTION_MAPPING_ID);
+
+        List<? extends VariableInstanceLog> variables = getLogService().findVariableInstances(pi.getId(),
+                "capturedException");
+        Assertions.assertThat(variables).hasSize(1);
+        Assertions.assertThat(variables.get(0).getValue()).isEqualTo("java.lang.RuntimeException: XXX");
+    }
+
+    /**
+     * Bug 1154557 - Signal Start Event doesn't map event data from ksession.signalEvent() to a process variable
+     *
+     * @see <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1154557">Bug 1154557</a>
+     */
+    @Test
+    public void testSignalStartEventDataMapping() throws Exception {
+        KieSession ksession = createKSession(SIGNAL_DATA_MAPPING);
+        final List<Long> list = new ArrayList<Long>();
+        final List<String> variableList = new ArrayList<String>();
+        ksession.addEventListener(new DefaultProcessEventListener() {
+            public void afterProcessStarted(ProcessStartedEvent event) {
+                list.add(event.getProcessInstance().getId());
+                variableList.add((String) ((WorkflowProcessInstance) event.getProcessInstance()).getVariable("x"));
+            }
+        });
+        ksession.signalEvent("MyStartSignal", "NewValue");
+        Assertions.assertThat(list).hasSize(1);
+        Assertions.assertThat(variableList.get(0)).isEqualTo("NewValue");
+    }
+
+    /**
+     * Bug 1090375 - Start message and signal events have always a String output despite the type of input
+     *
+     * @see <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1090375">Bug 1090375</a>
+     */
+    @Test
+    public void testSignalOutputType() throws Exception {
+        KieSession ksession = createKSession(SIGNAL_OUTPUT_TYPE);
+        SignalObjectReport report = new SignalObjectReport("Type of signal object report");
+        ksession.signalEvent("SignalObjectReport", report);
+        List<? extends VariableInstanceLog> vars = getLogService().findVariableInstancesByName("report", false);
+        VariableInstanceLog lastvar = vars.get(vars.size() - 1);
+        Assertions.assertThat(lastvar.getValue()).isEqualTo(report.toString());
+    }
+
+}

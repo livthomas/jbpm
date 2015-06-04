@@ -119,6 +119,12 @@ public abstract class JbpmTestCase extends JbpmJUnitBaseTestCase {
         return getRuntimeEngine().getKieSession();
     }
 
+    public KieSession restoreKSession(String... process) {
+        disposeRuntimeManager();
+        createRuntimeManager(process);
+        return getRuntimeEngine().getKieSession();
+    }
+
     public void assertProcessInstanceNeverRun(long processId) {
         Assertions.assertThat(getLogService().findProcessInstance(processId)).as("Process has been running").isNull();
     }
