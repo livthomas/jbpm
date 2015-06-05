@@ -16,16 +16,12 @@
 
 package org.jbpm.test.regression.task;
 
-import static org.jbpm.test.tools.TrackingListenerAssert.assertTriggered;
-import static org.jbpm.test.tools.TrackingListenerAssert.assertTriggeredAndLeft;
-
-import javax.persistence.EntityManagerFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.EntityManagerFactory;
 
 import org.assertj.core.api.Assertions;
-import org.jbpm.services.task.utils.ContentMarshallerHelper;
 import org.jbpm.test.JbpmTestCase;
 import org.jbpm.test.listener.TrackingProcessEventListener;
 import org.junit.Test;
@@ -33,10 +29,12 @@ import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.manager.RuntimeEngine;
 import org.kie.api.runtime.process.ProcessInstance;
 import org.kie.api.task.TaskService;
-import org.kie.api.task.model.Content;
 import org.kie.api.task.model.Status;
 import org.kie.api.task.model.Task;
 import org.kie.api.task.model.TaskSummary;
+
+import static org.jbpm.test.tools.TrackingListenerAssert.assertTriggered;
+import static org.jbpm.test.tools.TrackingListenerAssert.assertTriggeredAndLeft;
 
 public class HumanTaskTest extends JbpmTestCase {
 
@@ -60,9 +58,6 @@ public class HumanTaskTest extends JbpmTestCase {
 
     private static final String INPUT_TRANSFORMATION = "org/jbpm/test/regression/task/HumanTask-inputTransformation.bpmn2";
     private static final String INPUT_TRANSFORMATION_ID = "org.jbpm.test.regression.task.HumanTask-inputTransformation";
-
-    private static final String CONTENT = "org/jbpm/test/regression/task/HumanTask-content.bpmn2";
-    private static final String CONTENT_ID = "org.jbpm.test.regression.task.HumanTask-content";
 
     /**
      * Bug 958397 - Add a Boundary Timer to a Task
@@ -256,39 +251,6 @@ public class HumanTaskTest extends JbpmTestCase {
         taskService.complete(taskId, "john", null);
 
         assertProcessInstanceCompleted(pi.getId());
-    }
-
-    /**
-     * Bug 1180161 - Task attribute "Content" is not retrievable
-     *
-     * @see <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1180161">Bug 1180161</a>
-     */
-    @Test
-    public void testTaskContent() {
-        KieSession kieSession = null;
-        ProcessInstance processInstance = null;
-
-        try {
-            kieSession = createKSession(CONTENT);
-            processInstance = kieSession.startProcess(CONTENT_ID);
-
-            TaskService taskService = getRuntimeEngine().getTaskService();
-            List<TaskSummary> list = taskService.getTasksAssignedAsPotentialOwner("john", "en-UK");
-            Assertions.assertThat(list).isNotNull().hasSize(1);
-
-            TaskSummary task = list.get(0);
-            Content content = taskService.getContentById(taskService.getTaskById(task.getId()).getTaskData()
-                    .getDocumentContentId());
-            Object object = ContentMarshallerHelper.unmarshall(content.getContent(), kieSession.getEnvironment());
-            Assertions.assertThat(object.toString()).isEqualTo("someContent");
-        } finally {
-            if (kieSession != null) {
-                if (processInstance != null) {
-                    kieSession.abortProcessInstance(processInstance.getId());
-                    kieSession.dispose();
-                }
-            }
-        }
     }
 
 }
