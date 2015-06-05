@@ -40,6 +40,10 @@ public class SessionIsolationTest extends JbpmTestCase {
     private static final String RULE_TASK_ID = "org.jbpm.test.regression.SessionIsolation-ruleTask";
     private static final String RULE_TASK_DRL = "org/jbpm/test/regression/SessionIsolation-ruleTask.drl";
 
+    public SessionIsolationTest() {
+        super(false);
+    }
+
     @Test
     public void testSignal() throws Exception {
         createRuntimeManager(Strategy.PROCESS_INSTANCE, SIGNAL_ID, SIGNAL);
@@ -54,18 +58,18 @@ public class SessionIsolationTest extends JbpmTestCase {
         ProcessInstance pi1 = ksession1.startProcess(SIGNAL_ID);
         ProcessInstance pi2 = ksession2.startProcess(SIGNAL_ID);
 
-        assertProcessInstanceActive(pi1.getId());
-        assertProcessInstanceActive(pi2.getId());
+        assertProcessInstanceActive(pi1.getId(), ksession1);
+        assertProcessInstanceActive(pi2.getId(), ksession2);
 
         ksession1.signalEvent("event", null);
 
-        assertProcessInstanceCompleted(pi1.getId());
-        assertProcessInstanceActive(pi2.getId());
+        assertProcessInstanceNotActive(pi1.getId(), ksession1);
+        assertProcessInstanceActive(pi2.getId(), ksession2);
 
         ksession2.signalEvent("event", null);
 
-        assertProcessInstanceCompleted(pi1.getId());
-        assertProcessInstanceCompleted(pi2.getId());
+        assertProcessInstanceNotActive(pi1.getId(), ksession1);
+        assertProcessInstanceNotActive(pi2.getId(), ksession2);
     }
 
     @Test
@@ -86,18 +90,18 @@ public class SessionIsolationTest extends JbpmTestCase {
         ProcessInstance pi1 = ksession1.startProcess(RULE_TASK_ID);
         ProcessInstance pi2 = ksession2.startProcess(RULE_TASK_ID);
 
-        assertProcessInstanceActive(pi1.getId());
-        assertProcessInstanceActive(pi2.getId());
+        assertProcessInstanceActive(pi1.getId(), ksession1);
+        assertProcessInstanceActive(pi2.getId(), ksession2);
 
         ksession1.fireAllRules();
 
-        assertProcessInstanceCompleted(pi1.getId());
-        assertProcessInstanceActive(pi2.getId());
+        assertProcessInstanceNotActive(pi1.getId(), ksession1);
+        assertProcessInstanceActive(pi2.getId(), ksession2);
 
         ksession2.fireAllRules();
 
-        assertProcessInstanceCompleted(pi1.getId());
-        assertProcessInstanceCompleted(pi2.getId());
+        assertProcessInstanceNotActive(pi1.getId(), ksession1);
+        assertProcessInstanceNotActive(pi2.getId(), ksession2);
     }
 
 }
