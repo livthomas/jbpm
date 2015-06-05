@@ -17,6 +17,7 @@
 package org.jbpm.test;
 
 import java.io.FileInputStream;
+import java.util.Map;
 import java.util.Properties;
 
 import bitronix.tm.resource.jdbc.PoolingDataSource;
@@ -25,6 +26,7 @@ import org.junit.Rule;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
+import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +44,7 @@ public abstract class JbpmTestCase extends JbpmJUnitBaseTestCase {
     }
 
     public JbpmTestCase(boolean setupDataSource, boolean sessionPersistence) {
-        this(setupDataSource, sessionPersistence, "org.jbpm.persistence.jpa");
+        this(setupDataSource, sessionPersistence, "org.jbpm.test.persistence");
     }
 
     public JbpmTestCase(boolean setupDataSource, boolean sessionPersistence, String persistenceUnit) {
@@ -116,6 +118,11 @@ public abstract class JbpmTestCase extends JbpmJUnitBaseTestCase {
 
     public KieSession createKSession(String... process) {
         createRuntimeManager(process);
+        return getRuntimeEngine().getKieSession();
+    }
+
+    public KieSession createKSession(Map<String, ResourceType> res) {
+        createRuntimeManager(res);
         return getRuntimeEngine().getKieSession();
     }
 
