@@ -16,12 +16,12 @@
 
 package org.jbpm.test;
 
-import java.io.FileInputStream;
 import java.util.Map;
 import java.util.Properties;
 
 import bitronix.tm.resource.jdbc.PoolingDataSource;
 import org.assertj.core.api.Assertions;
+import org.jbpm.persistence.util.PersistenceUtil;
 import org.junit.Rule;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
@@ -68,52 +68,17 @@ public abstract class JbpmTestCase extends JbpmJUnitBaseTestCase {
 
     @Override
     protected PoolingDataSource setupPoolingDataSource() {
-        if (!"remote".equals(System.getProperty("db"))) {
-            return super.setupPoolingDataSource();
+        Properties dsProps = PersistenceUtil.getDatasourceProperties();
+        String jdbcUrl = dsProps.getProperty("url");
+        String driverClass = dsProps.getProperty("driverClassName");
+
+        // Setup the datasource
+        PoolingDataSource ds1 = PersistenceUtil.setupPoolingDataSource(dsProps, "jdbc/jbpm-ds", false);
+        if (driverClass.startsWith("org.h2")) {
+            ds1.getDriverProperties().setProperty("url", jdbcUrl);
         }
-
-        PoolingDataSource pds = new PoolingDataSource();
-        pds.setUniqueName("jdbc/jbpm-ds");
-        pds.setMinPoolSize(5);
-        pds.setMaxPoolSize(15);
-        pds.setAllowLocalTransactions(true);
-
-        Properties dbProps = new Properties();
-        String dbPropsPath = "allocated.db.properties";
-        if (System.getenv("WORKSPACE") != null) {
-            dbPropsPath = System.getenv("WORKSPACE") + "/" + dbPropsPath;
-        }
-        if (System.getProperty("WORKSPACE") != null) {
-            dbPropsPath = System.getenv("WORKSPACE") + "/" + dbPropsPath;
-        }
-
-        try {
-            dbProps.load(new FileInputStream(dbPropsPath));
-            String dbLabel = dbProps.getProperty("db.primary_label");
-            System.out.println("Tests will use " + dbLabel);
-
-            pds.setClassName(dbProps.getProperty("datasource.class.xa"));
-
-            Properties pdsp = pds.getDriverProperties();
-            pdsp.put("user", dbProps.getProperty("db.username"));
-            pdsp.put("password", dbProps.getProperty("db.password"));
-            pdsp.put("serverName", dbProps.getProperty("db.hostname"));
-            pdsp.put("portNumber", dbProps.getProperty("db.port"));
-            pdsp.put("databaseName", dbProps.getProperty("db.name"));
-
-            // DB-specific settings
-            if (dbLabel.startsWith("db2")) {
-                pdsp.put("driverType", 4);
-            } else if (dbLabel.startsWith("oracle")) {
-                pdsp.put("driverType", "thin");
-            }
-        } catch (Exception ex) {
-            throw new IllegalStateException(ex);
-        }
-
-        pds.init();
-
-        return pds;
+        ds1.init();
+        return ds1;
     }
 
     public KieSession createKSession(String... process) {
