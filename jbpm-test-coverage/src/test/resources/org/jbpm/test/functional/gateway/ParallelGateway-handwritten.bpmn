@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<definitions id="defs" targetNamespace="http://www.jboss.org/drools" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">   
+    <process id="org.jbpm.test.functional.gateway.ParallelGateway-handwritten">
+        <startEvent id="start1" name="start"/>
+        
+        <parallelGateway id="fork1" name="fork1" gatewayDirection="Diverging" />
+        
+        <scriptTask id="script1" name="script1"/>
+        
+        <parallelGateway id="fork2" name="fork2" gatewayDirection="Diverging"/>
+        
+        <scriptTask id="script2" name="script2"/>
+        
+        <parallelGateway id="join1" name="join" gatewayDirection="Converging"/>
+        
+        <endEvent id="end1" name="end"/>
+        
+        <sequenceFlow id="sf1" sourceRef="start1" targetRef="fork1"/>
+        <sequenceFlow id="sf2" sourceRef="fork1" targetRef="fork2"/>
+        <sequenceFlow id="sf3" sourceRef="fork1" targetRef="script1"/>
+        <sequenceFlow id="sf4" sourceRef="script1" targetRef="join1"/>
+        <sequenceFlow id="sf5" sourceRef="fork2" targetRef="script2"/>
+        <sequenceFlow id="sf6" sourceRef="script2" targetRef="join1"/>
+        <sequenceFlow id="sf7" sourceRef="fork2" targetRef="join1"/>
+        <sequenceFlow id="sf8" sourceRef="join1" targetRef="end1"/>
+    </process>
+</definitions>

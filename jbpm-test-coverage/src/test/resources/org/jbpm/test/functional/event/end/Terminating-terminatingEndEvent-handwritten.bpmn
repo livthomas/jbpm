@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<definitions id="my-definitions" targetNamespace="http://www.jboss.org/drools" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+
+  <process id="org.jbpm.test.functional.event.end.Terminating-terminatingEndEvent-handwritten" name="Terminating-terminatingEndEvent-handwritten" isExecutable="true">
+
+    <startEvent id="start" name="start" />
+    <sequenceFlow sourceRef="start" targetRef="script" />
+    <scriptTask id="script" name="script" />
+    <sequenceFlow sourceRef="script" targetRef="end" />
+    <endEvent id="end" name="end">
+      <terminateEventDefinition />
+    </endEvent>
+
+  </process>
+</definitions>

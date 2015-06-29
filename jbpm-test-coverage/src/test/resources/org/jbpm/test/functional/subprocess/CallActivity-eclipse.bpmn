@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<definitions id="Definition"
+             targetNamespace="http://www.jboss.org/drools"
+             typeLanguage="http://www.java.com/javaTypes"
+             expressionLanguage="http://www.mvel.org/2.0"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd"
+             xmlns:g="http://www.jboss.org/drools/flow/gpd"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:tns="http://www.jboss.org/drools">
+
+  <itemDefinition id="_varItem" structureRef="Object" />
+
+  <process processType="Private" isExecutable="true" id="org.jbpm.test.functional.subprocess.CallActivity-eclipse" name="CallActivity-eclipse" tns:packageName="defaultPackage" >
+
+    <!-- process variables -->
+    <property id="var" itemSubjectRef="_varItem"/>
+
+    <!-- nodes -->
+    <startEvent id="_1" name="start" />
+    <callActivity id="_2" name="reusable" calledElement="org.jbpm.test.functional.subprocess.CallActivity-reusableSubprocess-eclipse" >
+      <ioSpecification>
+        <dataInput id="_2_inSubVarInput" name="inSubVar" />
+        <dataOutput id="_2_outSubVarOutput" name="outSubVar" />
+        <inputSet>
+          <dataInputRefs>_2_inSubVarInput</dataInputRefs>
+        </inputSet>
+        <outputSet>
+          <dataOutputRefs>_2_outSubVarOutput</dataOutputRefs>
+        </outputSet>
+      </ioSpecification>
+      <dataInputAssociation>
+        <sourceRef>var</sourceRef>
+        <targetRef>_2_inSubVarInput</targetRef>
+      </dataInputAssociation>
+      <dataOutputAssociation>
+        <sourceRef>_2_outSubVarOutput</sourceRef>
+        <targetRef>var</targetRef>
+      </dataOutputAssociation>
+    </callActivity>
+    <endEvent id="_3" name="end" />
+    <scriptTask id="_4" name="script" scriptFormat="http://www.java.com/java" >
+      <script>kcontext.setVariable("var", 1);</script>
+    </scriptTask>
+
+    <!-- connections -->
+    <sequenceFlow id="_4-_2" sourceRef="_4" targetRef="_2" />
+    <sequenceFlow id="_2-_3" sourceRef="_2" targetRef="_3" />
+    <sequenceFlow id="_1-_4" sourceRef="_1" targetRef="_4" />
+
+  </process>
+
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="org.jbpm.test.functional.subprocess.CallActivity-eclipse" >
+      <bpmndi:BPMNShape bpmnElement="_1" >
+        <dc:Bounds x="16" y="16" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_2" >
+        <dc:Bounds x="208" y="16" width="110" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_3" >
+        <dc:Bounds x="350" y="16" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_4" >
+        <dc:Bounds x="96" y="16" width="80" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="_4-_2" >
+        <di:waypoint x="136" y="40" />
+        <di:waypoint x="263" y="40" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_2-_3" >
+        <di:waypoint x="263" y="40" />
+        <di:waypoint x="374" y="40" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_1-_4" >
+        <di:waypoint x="40" y="40" />
+        <di:waypoint x="136" y="40" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</definitions>

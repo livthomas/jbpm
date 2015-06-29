@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<definitions id="my-definitions" targetNamespace="http://www.jboss.org/drools" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <itemDefinition id="var_count" structureRef="Integer" />
+  <process id="org.jbpm.test.functional.event.TimerNode-handwritten" name="TimerNode-handwritten" isExecutable="true">
+    <property id="count" itemSubjectRef="var_count"/>
+    
+    <startEvent id="start" name="StartProcess" />
+
+    <scriptTask id="initialize" name="initialize" scriptFormat="http://www.java.com/java">
+      <script>kcontext.setVariable(&quot;count&quot;, 0);</script>
+    </scriptTask>
+    <sequenceFlow sourceRef="start" targetRef="initialize" />
+
+    <intermediateCatchEvent id="timer" name="Recurring timer">
+      <timerEventDefinition>
+        <timeCycle xsi:type="tFormalExpression">0###500</timeCycle>
+      </timerEventDefinition>
+    </intermediateCatchEvent>
+    <sequenceFlow sourceRef="initialize" targetRef="timer" />
+
+    <scriptTask id="increment" name="increment" scriptFormat="http://www.java.com/java">
+      <script>kcontext.setVariable("count", count + 1);</script>
+    </scriptTask>
+    <sequenceFlow sourceRef="timer" targetRef="increment" />
+
+    <exclusiveGateway id="gateway" name="Gateway" gatewayDirection="Diverging" />
+    <sequenceFlow sourceRef="increment" targetRef="gateway" />
+
+    <endEvent id="terminate" name="Terminate">
+      <terminateEventDefinition />
+    </endEvent>
+    <sequenceFlow sourceRef="gateway" targetRef="terminate">
+        <conditionExpression xsi:type="tFormalExpression" language="http://www.java.com/java">return count &gt;= 3;</conditionExpression>
+    </sequenceFlow>
+
+    <endEvent id="end" name="End" />
+    <sequenceFlow sourceRef="gateway" targetRef="end">
+      <conditionExpression xsi:type="tFormalExpression" language="http://www.java.com/java">return true;</conditionExpression>
+    </sequenceFlow>
+
+  </process>
+</definitions>

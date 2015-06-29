@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<definitions id="defs" targetNamespace="http://www.jboss.org/drools" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+    <itemDefinition id="message1Item" />
+    <message id="message1" itemRef="message1Item" />
+    <process id="org.jbpm.test.functional.gateway.EventBasedGateway-handwritten">
+        <startEvent id="start" name="start" />
+        
+        <eventBasedGateway id="fork" name="fork" gatewayDirection="Diverging" />
+        
+        <intermediateCatchEvent id="eventCond" name="cond">
+            <conditionalEventDefinition>
+                <condition xsi:type="tFormalExpression" language="http://www.mvel.org/2.0">Integer(intValue &gt; 1)</condition>
+            </conditionalEventDefinition>
+        </intermediateCatchEvent>
+        <intermediateCatchEvent id="eventSig" name="sig">
+            <signalEventDefinition signalRef="sigkill" />
+        </intermediateCatchEvent>
+        <intermediateCatchEvent id="eventMsg" name="msg">
+            <messageEventDefinition messageRef="message1" />
+        </intermediateCatchEvent>
+        <intermediateCatchEvent id="eventTimer" name="timer">
+            <timerEventDefinition>
+                <timeDuration>1S</timeDuration>
+            </timerEventDefinition>
+        </intermediateCatchEvent>
+        
+        <exclusiveGateway id="join" name="join" gatewayDirection="Converging" />
+        
+        <endEvent id="end" name="end"/>
+        
+        <sequenceFlow id="sf1" sourceRef="start" targetRef="fork"/>
+        
+        <sequenceFlow id="sf2" sourceRef="fork" targetRef="eventCond"/>
+        <sequenceFlow id="sf3" sourceRef="fork" targetRef="eventSig"/>
+        <sequenceFlow id="sf4" sourceRef="fork" targetRef="eventMsg"/>
+        <sequenceFlow id="sf5" sourceRef="fork" targetRef="eventTimer"/>
+        
+        <sequenceFlow id="sf6" sourceRef="eventCond" targetRef="join"/>
+        <sequenceFlow id="sf7" sourceRef="eventSig" targetRef="join"/>
+        <sequenceFlow id="sf8" sourceRef="eventMsg" targetRef="join"/>
+        <sequenceFlow id="sf9" sourceRef="eventTimer" targetRef="join"/>
+        
+        <sequenceFlow id="sf10" sourceRef="join" targetRef="end"/>
+    </process>
+</definitions>
