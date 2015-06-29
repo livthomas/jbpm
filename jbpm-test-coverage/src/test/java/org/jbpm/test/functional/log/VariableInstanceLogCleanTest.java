@@ -1,16 +1,20 @@
 package org.jbpm.test.functional.log;
 
 import org.assertj.core.api.Assertions;
-import org.jbpm.examples.quickstarts.Person;
+import org.jbpm.test.domain.Person;
 import org.jbpm.process.audit.JPAAuditLogService;
 import org.jbpm.test.JbpmTestCase;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.manager.audit.VariableInstanceLog;
 import org.kie.api.runtime.process.ProcessInstance;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class VariableInstanceLogCleanTest extends JbpmTestCase {
     private static final String DATA_OBJECT = "org/jbpm/test/functional/log/VariableInstanceLogClean-dataObject.bpmn";
