@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<definitions id="defs" targetNamespace="http://www.jboss.org/drools" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:drools="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">   
+    <itemDefinition id="xItem" structureRef="Integer"/>
+    <itemDefinition id="elementItem" structureRef="org.w3c.dom.Element"/>
+    <process id="org.jbpm.test.functional.gateway.ExclusiveGateway-handwritten">
+        <property id="x" itemSubjectRef="xItem"/>
+        <property id="element" itemSubjectRef="elementItem"/>
+        <startEvent id="start1" name="start"/>
+        
+        <scriptTask id="insertScript" name="insertScript">
+            <script>insert(kcontext.getProcessInstance().getVariable("x"))</script>
+        </scriptTask>
+
+        <exclusiveGateway id="fork1" name="fork1" gatewayDirection="Diverging" default="sf5" />
+        
+        <scriptTask id="script1" name="script1"/>
+        <scriptTask id="script2" name="script2"/>
+        <scriptTask id="script3" name="script3"/>
+        
+        <exclusiveGateway id="join" name="join" gatewayDirection="Converging"/>
+        
+        <exclusiveGateway id="fork2" name="fork2" gatewayDirection="Diverging"/>
+        
+        <endEvent id="end1" name="end1"/>
+        <endEvent id="end2" name="end2"/>
+        
+        <sequenceFlow id="sf1" sourceRef="start1" targetRef="insertScript"/>
+        <sequenceFlow id="sf2" sourceRef="insertScript" targetRef="fork1"/>
+        
+        <sequenceFlow id="sf3" sourceRef="fork1" targetRef="script1" drools:priority="1">
+            <conditionExpression xsi:type="tFormalExpression" language="http://www.java.com/java">return x > 10;</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="sf4" sourceRef="fork1" targetRef="script2" drools:priority="2">
+            <conditionExpression xsi:type="tFormalExpression" language="http://www.jboss.org/drools/rule">Integer( intValue > 1)</conditionExpression>
+        </sequenceFlow>
+        
+        <sequenceFlow id="sf5" sourceRef="fork1" targetRef="script3" drools:priority="3">
+            <conditionExpression></conditionExpression>
+        </sequenceFlow>
+        
+        <sequenceFlow id="sf6" sourceRef="script1" targetRef="join"/>
+        <sequenceFlow id="sf7" sourceRef="script2" targetRef="join"/>
+        <sequenceFlow id="sf8" sourceRef="script3" targetRef="join"/>
+        
+        <sequenceFlow id="sf9" sourceRef="join" targetRef="fork2"/>
+        
+        <sequenceFlow id="sf10" sourceRef="fork2" targetRef="end1">
+            <conditionExpression xsi:type="tFormalExpression" language="http://www.w3.org/1999/XPath">$element//@value = 'test'</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="sf11" sourceRef="fork2" targetRef="end2">
+            <conditionExpression xsi:type="tFormalExpression" language="http://www.w3.org/1999/XPath">$element//@value = 'example'</conditionExpression>
+        </sequenceFlow>
+    </process>
+</definitions>

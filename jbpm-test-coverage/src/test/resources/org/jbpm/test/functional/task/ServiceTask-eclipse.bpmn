@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<definitions id="Definition"
+             targetNamespace="http://www.jboss.org/drools"
+             typeLanguage="http://www.java.com/javaTypes"
+             expressionLanguage="http://www.mvel.org/2.0"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd"
+             xmlns:g="http://www.jboss.org/drools/flow/gpd"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:tns="http://www.jboss.org/drools">
+
+  <itemDefinition id="_xItem" structureRef="Integer" />
+  <itemDefinition id="_yItem" structureRef="Integer" />
+  <itemDefinition id="_resultItem" structureRef="Integer" />
+
+  <process processType="Private" isExecutable="true" id="org.jbpm.test.functional.task.ServiceTask-eclipse" name="ServiceTask-eclipse" tns:packageName="org.jbpm.test.functional.task" >
+
+    <!-- process variables -->
+    <property id="x" itemSubjectRef="_xItem"/>
+    <property id="y" itemSubjectRef="_yItem"/>
+    <property id="result" itemSubjectRef="_resultItem"/>
+
+    <!-- nodes -->
+    <startEvent id="_1" name="start" />
+    <endEvent id="_2" name="end" />
+    <task id="_4" name="WS Calculator" tns:taskName="CalculatorWorkItem" >
+      <ioSpecification>
+        <dataInput id="_4_operand2Input" name="operand2" />
+        <dataInput id="_4_operand1Input" name="operand1" />
+        <dataOutput id="_4_resultOutput" name="result" />
+        <inputSet>
+          <dataInputRefs>_4_operand2Input</dataInputRefs>
+          <dataInputRefs>_4_operand1Input</dataInputRefs>
+        </inputSet>
+        <outputSet>
+          <dataOutputRefs>_4_resultOutput</dataOutputRefs>
+        </outputSet>
+      </ioSpecification>
+      <dataInputAssociation>
+        <sourceRef>y</sourceRef>
+        <targetRef>_4_operand2Input</targetRef>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <sourceRef>x</sourceRef>
+        <targetRef>_4_operand1Input</targetRef>
+      </dataInputAssociation>
+      <dataOutputAssociation>
+        <sourceRef>_4_resultOutput</sourceRef>
+        <targetRef>result</targetRef>
+      </dataOutputAssociation>
+    </task>
+
+    <!-- connections -->
+    <sequenceFlow id="_4-_2" sourceRef="_4" targetRef="_2" />
+    <sequenceFlow id="_1-_4" sourceRef="_1" targetRef="_4" />
+
+  </process>
+
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="org.jbpm.test.functional.task.ServiceTask-eclipse" >
+      <bpmndi:BPMNShape bpmnElement="_1" >
+        <dc:Bounds x="16" y="16" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_2" >
+        <dc:Bounds x="228" y="16" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_4" >
+        <dc:Bounds x="96" y="16" width="100" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="_4-_2" >
+        <di:waypoint x="146" y="40" />
+        <di:waypoint x="252" y="40" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_1-_4" >
+        <di:waypoint x="40" y="40" />
+        <di:waypoint x="146" y="40" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</definitions>

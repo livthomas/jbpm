@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<definitions id="defs" targetNamespace="http://www.jboss.org/drools" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">   
+   
+    <itemDefinition id="xItem" structureRef="Integer" />
+    
+    <process id="org.jbpm.test.functional.gateway.InclusiveGateway-handwritten">
+
+        <property id="x" itemSubjectRef="xItem"/>
+
+        <startEvent id="start" name="start" />
+        <endEvent id="end" name="end" />
+        <inclusiveGateway id="fork" name="fork" gatewayDirection="Diverging" />
+        <exclusiveGateway id="join" name="join" gatewayDirection="Converging" />
+        <scriptTask id="script1" name="script1" scriptFormat="http://www.java.com/java" >
+            <script></script>
+        </scriptTask>
+        <scriptTask id="script2" name="script2" scriptFormat="http://www.java.com/java" >
+            <script></script>
+        </scriptTask>
+        <scriptTask id="script3" name="script3" scriptFormat="http://www.java.com/java" >
+            <script></script>
+        </scriptTask>
+        <scriptTask id="script4" name="finalScript" scriptFormat="http://www.java.com/java" >
+            <script></script>
+        </scriptTask>
+
+        <sequenceFlow id="sf1" sourceRef="start" targetRef="fork" />
+        
+        <sequenceFlow id="sf6" sourceRef="fork" targetRef="script1" name="constraint1">
+            <conditionExpression xsi:type="tFormalExpression" language="http://www.java.com/java" >return x &gt; 10;</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="sf7" sourceRef="fork" targetRef="script2" name="constraint2">
+            <conditionExpression xsi:type="tFormalExpression" language="http://www.java.com/java" >return x &gt; 1;</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="sf8" sourceRef="fork" targetRef="script3" name="constraint3">
+            <conditionExpression xsi:type="tFormalExpression" language="http://www.java.com/java" >return x &gt; 100;</conditionExpression>
+        </sequenceFlow>
+        
+        <sequenceFlow id="sf2" sourceRef="script1" targetRef="join" />
+        <sequenceFlow id="sf3" sourceRef="script2" targetRef="join" />
+        <sequenceFlow id="sf4" sourceRef="script3" targetRef="join" />
+        <sequenceFlow id="sf5" sourceRef="join" targetRef="script4" />
+        
+        <sequenceFlow id="sf9" sourceRef="script4" targetRef="end" />
+    </process>
+</definitions>

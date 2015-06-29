@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.omg.org/bpmn20"
+    xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"
+    xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+    xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+    xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+    xmlns:drools="http://www.jboss.org/drools"
+    id="_0Oi4AGhqEeGzGa03txWmwg"
+    xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd"
+    targetNamespace="http://www.omg.org/bpmn20">
+  
+  
+  <bpmn2:itemDefinition id="_countItem" structureRef="Integer"/>
+  <bpmn2:process id="org.jbpm.test.functional.event.TimerNode-designer" drools:packageName="org.jbpm.test.functional.event" name="TimerNode-designer" isExecutable="true">
+    <bpmn2:property id="count" itemSubjectRef="_countItem"/>
+    <bpmn2:startEvent id="_486AFB9D-4126-479F-9210-012EF635D611" drools:bgcolor="#ffffff" name="StartProcess">
+      <bpmn2:outgoing>_FE206707-BFA8-43EA-A654-A63091AB3B5F</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:scriptTask id="_E64F0BA5-4042-4644-9F59-0C3E597AFC86" name="initialize" scriptFormat="http://www.java.com/java">
+      <bpmn2:incoming>_FE206707-BFA8-43EA-A654-A63091AB3B5F</bpmn2:incoming>
+      <bpmn2:outgoing>_308A7C7B-2629-4289-9C5E-05AEFFB93B39</bpmn2:outgoing>
+      <bpmn2:script><![CDATA[kcontext.setVariable("count", 0);]]></bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="_FE206707-BFA8-43EA-A654-A63091AB3B5F" sourceRef="_486AFB9D-4126-479F-9210-012EF635D611" targetRef="_E64F0BA5-4042-4644-9F59-0C3E597AFC86"/>
+    <bpmn2:intermediateCatchEvent id="_6128DEE7-9613-4307-AE4E-80FFF0629A72" drools:bgcolor="#ffffff" drools:boundaryca="false" name="Recurring timer">
+      <bpmn2:incoming>_308A7C7B-2629-4289-9C5E-05AEFFB93B39</bpmn2:incoming>
+      <bpmn2:outgoing>_67CD5485-6876-4B7C-8964-0529D87619EA</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition id="_0Oi4AWhqEeGzGa03txWmwg">
+        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression" id="_0Oi4AmhqEeGzGa03txWmwg">0###500</bpmn2:timeCycle>
+      </bpmn2:timerEventDefinition>
+    </bpmn2:intermediateCatchEvent>
+    <bpmn2:scriptTask id="_03E2C2A3-7457-4F36-9227-FF8E578592D5" name="increment" scriptFormat="http://www.java.com/java">
+      <bpmn2:incoming>_67CD5485-6876-4B7C-8964-0529D87619EA</bpmn2:incoming>
+      <bpmn2:outgoing>_34423131-B67F-4660-91FF-00F258E680A6</bpmn2:outgoing>
+      <bpmn2:script><![CDATA[kcontext.setVariable("count", count+1);]]></bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="_308A7C7B-2629-4289-9C5E-05AEFFB93B39" sourceRef="_E64F0BA5-4042-4644-9F59-0C3E597AFC86" targetRef="_6128DEE7-9613-4307-AE4E-80FFF0629A72"/>
+    <bpmn2:sequenceFlow id="_67CD5485-6876-4B7C-8964-0529D87619EA" sourceRef="_6128DEE7-9613-4307-AE4E-80FFF0629A72" targetRef="_03E2C2A3-7457-4F36-9227-FF8E578592D5"/>
+    <bpmn2:exclusiveGateway id="_A9730B75-5159-42A1-8386-09A75F48089E" drools:bgcolor="#ffffff" drools:dg="" name="Gateway" gatewayDirection="Diverging">
+      <bpmn2:incoming>_34423131-B67F-4660-91FF-00F258E680A6</bpmn2:incoming>
+      <bpmn2:outgoing>_D13D4A91-A025-4598-BD30-8DB6F4A14B54</bpmn2:outgoing>
+      <bpmn2:outgoing>_659765E9-CAEF-4D0E-9A7A-32C7852160D9</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:endEvent id="_9C6486D2-D922-47CF-A148-5F76256F6BCD" drools:bgcolor="#ffffff" name="End">
+      <bpmn2:incoming>_659765E9-CAEF-4D0E-9A7A-32C7852160D9</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="_34423131-B67F-4660-91FF-00F258E680A6" sourceRef="_03E2C2A3-7457-4F36-9227-FF8E578592D5" targetRef="_A9730B75-5159-42A1-8386-09A75F48089E"/>
+    <bpmn2:sequenceFlow id="_D13D4A91-A025-4598-BD30-8DB6F4A14B54" name="finish" sourceRef="_A9730B75-5159-42A1-8386-09A75F48089E" targetRef="_3F133CE8-2FD3-483D-8A04-D74A3CBE4E2F">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="_0Oi4A2hqEeGzGa03txWmwg" language="http://www.java.com/java"><![CDATA[return count == 3;]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="_659765E9-CAEF-4D0E-9A7A-32C7852160D9" drools:priority="1" name="continue" sourceRef="_A9730B75-5159-42A1-8386-09A75F48089E" targetRef="_9C6486D2-D922-47CF-A148-5F76256F6BCD">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="_0Oi4BGhqEeGzGa03txWmwg" language="http://www.java.com/java"><![CDATA[return true;]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:endEvent id="_3F133CE8-2FD3-483D-8A04-D74A3CBE4E2F" drools:bgcolor="#ffffff" name="Terminate">
+      <bpmn2:incoming>_D13D4A91-A025-4598-BD30-8DB6F4A14B54</bpmn2:incoming>
+      <bpmn2:terminateEventDefinition id="_0Oi4BWhqEeGzGa03txWmwg"/>
+    </bpmn2:endEvent>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="_0OjfEGhqEeGzGa03txWmwg">
+    <bpmndi:BPMNPlane id="_0OjfEWhqEeGzGa03txWmwg" bpmnElement="org.jbpm.test.functional.event.TimerNode-designer">
+      <bpmndi:BPMNShape id="_0OjfEmhqEeGzGa03txWmwg" bpmnElement="_486AFB9D-4126-479F-9210-012EF635D611">
+        <dc:Bounds height="30.0" width="30.0" x="45.0" y="75.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_0OjfE2hqEeGzGa03txWmwg" bpmnElement="_E64F0BA5-4042-4644-9F59-0C3E597AFC86">
+        <dc:Bounds height="80.0" width="100.0" x="150.0" y="50.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_0OjfFGhqEeGzGa03txWmwg" bpmnElement="_FE206707-BFA8-43EA-A654-A63091AB3B5F">
+        <di:waypoint xsi:type="dc:Point" x="60.0" y="90.0"/>
+        <di:waypoint xsi:type="dc:Point" x="200.0" y="90.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_0OjfFWhqEeGzGa03txWmwg" bpmnElement="_6128DEE7-9613-4307-AE4E-80FFF0629A72">
+        <dc:Bounds height="30.0" width="30.0" x="315.0" y="75.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_0OjfFmhqEeGzGa03txWmwg" bpmnElement="_03E2C2A3-7457-4F36-9227-FF8E578592D5">
+        <dc:Bounds height="80.0" width="100.0" x="405.0" y="50.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_0OjfF2hqEeGzGa03txWmwg" bpmnElement="_308A7C7B-2629-4289-9C5E-05AEFFB93B39">
+        <di:waypoint xsi:type="dc:Point" x="200.0" y="90.0"/>
+        <di:waypoint xsi:type="dc:Point" x="330.0" y="90.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_0OjfGGhqEeGzGa03txWmwg" bpmnElement="_67CD5485-6876-4B7C-8964-0529D87619EA">
+        <di:waypoint xsi:type="dc:Point" x="330.0" y="90.0"/>
+        <di:waypoint xsi:type="dc:Point" x="455.0" y="90.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_0OjfGWhqEeGzGa03txWmwg" bpmnElement="_A9730B75-5159-42A1-8386-09A75F48089E">
+        <dc:Bounds height="40.0" width="40.0" x="570.0" y="70.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_0OjfGmhqEeGzGa03txWmwg" bpmnElement="_9C6486D2-D922-47CF-A148-5F76256F6BCD">
+        <dc:Bounds height="28.0" width="28.0" x="675.0" y="135.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_0OjfG2hqEeGzGa03txWmwg" bpmnElement="_34423131-B67F-4660-91FF-00F258E680A6">
+        <di:waypoint xsi:type="dc:Point" x="455.0" y="90.0"/>
+        <di:waypoint xsi:type="dc:Point" x="590.0" y="90.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_0OjfHGhqEeGzGa03txWmwg" bpmnElement="_D13D4A91-A025-4598-BD30-8DB6F4A14B54">
+        <di:waypoint xsi:type="dc:Point" x="590.0" y="90.0"/>
+        <di:waypoint xsi:type="dc:Point" x="689.0" y="90.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_0OjfHWhqEeGzGa03txWmwg" bpmnElement="_659765E9-CAEF-4D0E-9A7A-32C7852160D9">
+        <di:waypoint xsi:type="dc:Point" x="590.0" y="90.0"/>
+        <di:waypoint xsi:type="dc:Point" x="590.0" y="149.0"/>
+        <di:waypoint xsi:type="dc:Point" x="689.0" y="149.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_0OjfHmhqEeGzGa03txWmwg" bpmnElement="_3F133CE8-2FD3-483D-8A04-D74A3CBE4E2F">
+        <dc:Bounds height="28.0" width="28.0" x="675.0" y="76.0"/>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:g="http://www.jboss.org/drools/flow/gpd" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+  <bpmn2:itemDefinition id="_urlItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_namespaceItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_interfaceItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_operationItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_parametersItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_resultItem" structureRef="Object"/>
+  <bpmn2:process id="org.jbpm.test.functional.wih.WebServices-invocation" tns:version="1" tns:packageName="org.jbpm.test.functional.wih" tns:adHoc="false" name="WebServices-invocation" isExecutable="true" processType="Private">
+    <bpmn2:property id="url" itemSubjectRef="_urlItem"/>
+    <bpmn2:property id="namespace" itemSubjectRef="_namespaceItem"/>
+    <bpmn2:property id="interface" itemSubjectRef="_interfaceItem"/>
+    <bpmn2:property id="operation" itemSubjectRef="_operationItem"/>
+    <bpmn2:property id="parameters" itemSubjectRef="_parametersItem"/>
+    <bpmn2:property id="result" itemSubjectRef="_resultItem"/>
+    <bpmn2:startEvent id="_1" name="Start">
+      <bpmn2:outgoing>_1-_4</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:sequenceFlow id="_1-_4" tns:priority="1" sourceRef="_1" targetRef="_4"/>
+    <bpmn2:task id="_4" tns:taskName="WebService" name="Any WS">
+      <bpmn2:incoming>_1-_4</bpmn2:incoming>
+      <bpmn2:outgoing>_4-_3</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="InputOutputSpecification_1">
+        <bpmn2:dataInput id="_4_urlInput" name="Url"/>
+        <bpmn2:dataInput id="_4_namespaceInput" name="Namespace"/>
+        <bpmn2:dataInput id="_4_interfaceInput" name="Interface"/>
+        <bpmn2:dataInput id="_4_operationInput" name="Operation"/>
+        <bpmn2:dataInput id="_4_parametersInput" name="Parameter"/>
+        <bpmn2:dataOutput id="_4_resultOutput" name="Result"/>
+        <bpmn2:inputSet id="InputSet_1">
+          <bpmn2:dataInputRefs>_4_urlInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_4_namespaceInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_4_interfaceInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_4_parametersInput</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="OutputSet_1">
+          <bpmn2:dataOutputRefs>_4_resultOutput</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_1">
+        <bpmn2:sourceRef>url</bpmn2:sourceRef>
+        <bpmn2:targetRef>_4_urlInput</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_2">
+        <bpmn2:sourceRef>namespace</bpmn2:sourceRef>
+        <bpmn2:targetRef>_4_namespaceInput</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_3">
+        <bpmn2:sourceRef>interface</bpmn2:sourceRef>
+        <bpmn2:targetRef>_4_interfaceInput</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_4">
+        <bpmn2:sourceRef>operation</bpmn2:sourceRef>
+        <bpmn2:targetRef>_4_operationInput</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_5">
+        <bpmn2:sourceRef>parameters</bpmn2:sourceRef>
+        <bpmn2:targetRef>_4_parametersInput</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_1">
+        <bpmn2:sourceRef>_4_resultOutput</bpmn2:sourceRef>
+        <bpmn2:targetRef>result</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="_4-_3" tns:priority="1" sourceRef="_4" targetRef="_3"/>
+    <bpmn2:endEvent id="_3" name="End">
+      <bpmn2:incoming>_4-_3</bpmn2:incoming>
+      <bpmn2:terminateEventDefinition id="TerminateEventDefinition_1"/>
+    </bpmn2:endEvent>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="org.jbpm.test.functional.wih.WebServices-invocation">
+      <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="_1">
+        <dc:Bounds height="36.0" width="36.0" x="50.0" y="57.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="_3">
+        <dc:Bounds height="36.0" width="36.0" x="296.0" y="57.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="_1-_4" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_Task_1">
+        <di:waypoint xsi:type="dc:Point" x="86.0" y="75.0"/>
+        <di:waypoint xsi:type="dc:Point" x="108.0" y="75.0"/>
+        <di:waypoint xsi:type="dc:Point" x="108.0" y="75.0"/>
+        <di:waypoint xsi:type="dc:Point" x="136.0" y="75.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="_4-_3" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_EndEvent_1">
+        <di:waypoint xsi:type="dc:Point" x="246.0" y="75.0"/>
+        <di:waypoint xsi:type="dc:Point" x="268.0" y="75.0"/>
+        <di:waypoint xsi:type="dc:Point" x="268.0" y="75.0"/>
+        <di:waypoint xsi:type="dc:Point" x="296.0" y="75.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="_4">
+        <dc:Bounds height="50.0" width="110.0" x="136.0" y="50.0"/>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

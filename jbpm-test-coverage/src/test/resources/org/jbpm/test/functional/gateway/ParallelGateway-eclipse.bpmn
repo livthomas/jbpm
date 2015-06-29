@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<definitions id="Definition"
+             targetNamespace="http://www.jboss.org/drools"
+             typeLanguage="http://www.java.com/javaTypes"
+             expressionLanguage="http://www.mvel.org/2.0"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd"
+             xmlns:g="http://www.jboss.org/drools/flow/gpd"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:tns="http://www.jboss.org/drools">
+
+  <process processType="Private" isExecutable="true" id="org.jbpm.test.functional.gateway.ParallelGateway-eclipse" name="ParallelGateway-eclipse" tns:packageName="org.jbpm.test.functional.gateway" >
+
+    <!-- nodes -->
+    <startEvent id="_1" name="start" />
+    <endEvent id="_2" name="end" />
+    <parallelGateway id="_3" name="fork1" gatewayDirection="Diverging" />
+    <parallelGateway id="_4" name="fork2" gatewayDirection="Diverging" />
+    <parallelGateway id="_5" name="join" gatewayDirection="Converging" />
+    <scriptTask id="_6" name="script1" />
+    <scriptTask id="_7" name="script2" />
+
+    <!-- connections -->
+    <sequenceFlow id="_5-_2" sourceRef="_5" targetRef="_2" />
+    <sequenceFlow id="_1-_3" sourceRef="_1" targetRef="_3" />
+    <sequenceFlow id="_3-_4" sourceRef="_3" targetRef="_4" />
+    <sequenceFlow id="_7-_5" sourceRef="_7" targetRef="_5" />
+    <sequenceFlow id="_4-_5" sourceRef="_4" targetRef="_5" />
+    <sequenceFlow id="_6-_5" sourceRef="_6" targetRef="_5" />
+    <sequenceFlow id="_3-_6" sourceRef="_3" targetRef="_6" />
+    <sequenceFlow id="_4-_7" sourceRef="_4" targetRef="_7" />
+
+  </process>
+
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="org.jbpm.test.functional.gateway.ParallelGateway-eclipse" >
+      <bpmndi:BPMNShape bpmnElement="_1" >
+        <dc:Bounds x="16" y="56" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_2" >
+        <dc:Bounds x="482" y="66" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_3" >
+        <dc:Bounds x="97" y="126" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_4" >
+        <dc:Bounds x="207" y="260" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_5" >
+        <dc:Bounds x="401" y="66" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_6" >
+        <dc:Bounds x="245" y="11" width="80" height="49" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_7" >
+        <dc:Bounds x="235" y="138" width="80" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="_5-_2" >
+        <di:waypoint x="425" y="90" />
+        <di:waypoint x="506" y="90" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_1-_3" >
+        <di:waypoint x="40" y="80" />
+        <di:waypoint x="121" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_3-_4" >
+        <di:waypoint x="121" y="150" />
+        <di:waypoint x="119" y="280" />
+        <di:waypoint x="231" y="284" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_7-_5" >
+        <di:waypoint x="275" y="162" />
+        <di:waypoint x="425" y="90" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_4-_5" >
+        <di:waypoint x="231" y="284" />
+        <di:waypoint x="435" y="279" />
+        <di:waypoint x="425" y="90" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_6-_5" >
+        <di:waypoint x="285" y="35" />
+        <di:waypoint x="425" y="90" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_3-_6" >
+        <di:waypoint x="121" y="150" />
+        <di:waypoint x="285" y="35" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_4-_7" >
+        <di:waypoint x="231" y="284" />
+        <di:waypoint x="275" y="162" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</definitions>

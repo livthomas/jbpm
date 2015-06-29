@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<definitions id="Definition"
+             targetNamespace="http://www.jboss.org/drools"
+             typeLanguage="http://www.java.com/javaTypes"
+             expressionLanguage="http://www.mvel.org/2.0"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd"
+             xmlns:g="http://www.jboss.org/drools/flow/gpd"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:tns="http://www.jboss.org/drools">
+
+  <itemDefinition id="_listItem" structureRef="java.util.List" />
+
+  <itemDefinition id="_4_multiInstanceItemType" structureRef="String" />
+
+  <process processType="Private" isExecutable="true" id="org.jbpm.test.functional.subprocess.MultipleInstancesSubprocess-eclipse" name="MultipleInstancesSubprocess-eclipse" tns:packageName="org.jbpm.test.functional.subprocess" >
+
+    <!-- process variables -->
+    <property id="list" itemSubjectRef="_listItem"/>
+
+    <!-- nodes -->
+    <startEvent id="_1" name="start" />
+    <endEvent id="_2" name="end" />
+    <subProcess id="_4" name="multipleInstances"  >
+      <ioSpecification>
+        <dataInput id="_4_input" name="MultiInstanceInput" />
+        <inputSet/>
+        <outputSet/>
+      </ioSpecification>
+      <dataInputAssociation>
+        <sourceRef>list</sourceRef>
+        <targetRef>_4_input</targetRef>
+      </dataInputAssociation>
+      <multiInstanceLoopCharacteristics>
+        <loopDataInputRef>_4_input</loopDataInputRef>
+        <inputDataItem id="listItem" itemSubjectRef="_4_multiInstanceItemType"/>
+      </multiInstanceLoopCharacteristics>
+    <!-- nodes -->
+    <startEvent id="_4-2-1" name="innerStart" />
+    <endEvent id="_4-2-2" name="innerEnd" />
+    <scriptTask id="_4-2-3" name="innerScript" scriptFormat="http://www.java.com/java" >
+      <script>kcontext.setVariable("listItem", listItem + "-eaten");</script>
+    </scriptTask>
+    <!-- connections -->
+    <sequenceFlow id="_4-2-3-_4-2-2" sourceRef="_4-2-3" targetRef="_4-2-2" />
+    <sequenceFlow id="_4-2-1-_4-2-3" sourceRef="_4-2-1" targetRef="_4-2-3" />
+    </subProcess>
+    <scriptTask id="_5" name="script" scriptFormat="http://www.java.com/java" >
+      <script></script>
+    </scriptTask>
+
+    <!-- connections -->
+    <sequenceFlow id="_4-_2" sourceRef="_4" targetRef="_2" />
+    <sequenceFlow id="_5-_4" sourceRef="_5" targetRef="_4" />
+    <sequenceFlow id="_1-_5" sourceRef="_1" targetRef="_5" />
+
+  </process>
+
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="org.jbpm.test.functional.subprocess.MultipleInstancesSubprocess-eclipse" >
+      <bpmndi:BPMNShape bpmnElement="_1" >
+        <dc:Bounds x="16" y="96" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_2" >
+        <dc:Bounds x="654" y="96" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_4" >
+        <dc:Bounds x="208" y="16" width="414" height="208" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_4-2-1" >
+        <dc:Bounds x="223" y="93" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_4-2-2" >
+        <dc:Bounds x="547" y="94" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_4-2-3" >
+        <dc:Bounds x="394" y="91" width="80" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_5" >
+        <dc:Bounds x="96" y="96" width="80" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="_4-2-3-_4-2-2" >
+        <di:waypoint x="226" y="99" />
+        <di:waypoint x="363" y="102" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_4-2-1-_4-2-3" >
+        <di:waypoint x="39" y="101" />
+        <di:waypoint x="226" y="99" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_4-_2" >
+        <di:waypoint x="415" y="120" />
+        <di:waypoint x="678" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_5-_4" >
+        <di:waypoint x="136" y="120" />
+        <di:waypoint x="415" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_1-_5" >
+        <di:waypoint x="40" y="120" />
+        <di:waypoint x="136" y="120" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</definitions>
