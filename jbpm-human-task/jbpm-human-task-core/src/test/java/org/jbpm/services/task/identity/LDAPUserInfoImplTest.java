@@ -15,23 +15,21 @@
 
 package org.jbpm.services.task.identity;
 
-import static org.jbpm.services.task.identity.LDAPBaseTest.SearchScope.OBJECT_SCOPE;
-import static org.jbpm.services.task.identity.LDAPBaseTest.SearchScope.ONELEVEL_SCOPE;
-import static org.jbpm.services.task.identity.LDAPBaseTest.SearchScope.SUBTREE_SCOPE;
-
 import java.util.Iterator;
 import java.util.Properties;
-
 import javax.naming.Context;
 
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
+import org.jbpm.services.task.utils.LdapSearcher.SearchScope;
 import org.junit.Test;
 import org.kie.api.task.model.Group;
 import org.kie.api.task.model.OrganizationalEntity;
 import org.kie.api.task.model.User;
 import org.kie.internal.task.api.TaskModelProvider;
 import org.kie.internal.task.api.UserInfo;
+
+import static org.jbpm.services.task.utils.LdapSearcher.SearchScope.*;
 
 public class LDAPUserInfoImplTest extends LDAPBaseTest {
 
@@ -51,7 +49,7 @@ public class LDAPUserInfoImplTest extends LDAPBaseTest {
 
     private Properties createUserInfoProperties() {
         Properties properties = new Properties();
-        properties.setProperty(Context.PROVIDER_URL, "ldap://localhost:10389");
+        properties.setProperty(Context.PROVIDER_URL, SERVER_URL);
         properties.setProperty(LDAPUserInfoImpl.USER_CTX, "ou=People,dc=jbpm,dc=org");
         properties.setProperty(LDAPUserInfoImpl.ROLE_CTX, "ou=Roles,dc=jbpm,dc=org");
         properties.setProperty(LDAPUserInfoImpl.USER_FILTER, "(uid={0})");
@@ -71,7 +69,7 @@ public class LDAPUserInfoImplTest extends LDAPBaseTest {
             properties.setProperty(LDAPUserInfoImpl.NAME_ATTR_ID, "name");
         }
         if (entity.getId().startsWith("uid=") || entity.getId().startsWith("cn=")) {
-            properties.setProperty(LDAPUserInfoImpl.IS_ENTITY_ID_DN, "true");
+            properties.setProperty(LDAPUserInfoImpl.ENTITY_ID_DN, "true");
         }
         UserInfo ldapUserInfo = new LDAPUserInfoImpl(properties);
         String name = ldapUserInfo.getDisplayName(entity);
@@ -125,7 +123,7 @@ public class LDAPUserInfoImplTest extends LDAPBaseTest {
             properties.setProperty(LDAPUserInfoImpl.MEMBER_ATTR_ID, "representative");
         }
         if (distinguishedName) {
-            properties.setProperty(LDAPUserInfoImpl.IS_ENTITY_ID_DN, "true");
+            properties.setProperty(LDAPUserInfoImpl.ENTITY_ID_DN, "true");
         }
         UserInfo ldapUserInfo = new LDAPUserInfoImpl(properties);
 
@@ -157,7 +155,7 @@ public class LDAPUserInfoImplTest extends LDAPBaseTest {
         testGetMembersForGroup(false, false, false);
     }
 
-    
+
     @Test
     public void testGetMembersForGroupDnByDefaultAttribute() {
         testGetMembersForGroup(false, false, true);
@@ -167,7 +165,7 @@ public class LDAPUserInfoImplTest extends LDAPBaseTest {
     public void testGetMembersForGroupByCustomAttribute() {
         testGetMembersForGroup(false, true, false);
     }
-    
+
     @Test
     public void testGetMembersForGroupDnByCustomAttribute() {
         testGetMembersForGroup(false, true, true);
@@ -189,7 +187,7 @@ public class LDAPUserInfoImplTest extends LDAPBaseTest {
             properties.setProperty(LDAPUserInfoImpl.EMAIL_ATTR_ID, "email");
         }
         if (group.getId().startsWith("cn=")) {
-            properties.setProperty(LDAPUserInfoImpl.IS_ENTITY_ID_DN, "true");
+            properties.setProperty(LDAPUserInfoImpl.ENTITY_ID_DN, "true");
         }
         UserInfo ldapUserInfo = new LDAPUserInfoImpl(properties);
 
@@ -201,7 +199,7 @@ public class LDAPUserInfoImplTest extends LDAPBaseTest {
         testHasEmail(MANAGER, true, false);
     }
 
-    
+
     @Test
     public void testHasExistingEmailDnByDefaultAttribute() {
         testHasEmail(MANAGER_DN, true, false);
@@ -212,7 +210,7 @@ public class LDAPUserInfoImplTest extends LDAPBaseTest {
         testHasEmail(USER, true, true);
     }
 
-    
+
     @Test
     public void testHasExistingEmailDnByCustomAttribute() {
         testHasEmail(USER_DN, true, true);
@@ -234,7 +232,7 @@ public class LDAPUserInfoImplTest extends LDAPBaseTest {
             properties.setProperty(LDAPUserInfoImpl.EMAIL_ATTR_ID, "email");
         }
         if (entity.getId().startsWith("uid=") || entity.getId().startsWith("cn=")) {
-            properties.setProperty(LDAPUserInfoImpl.IS_ENTITY_ID_DN, "true");
+            properties.setProperty(LDAPUserInfoImpl.ENTITY_ID_DN, "true");
         }
         UserInfo ldapUserInfo = new LDAPUserInfoImpl(properties);
 
@@ -307,7 +305,7 @@ public class LDAPUserInfoImplTest extends LDAPBaseTest {
             properties.setProperty(LDAPUserInfoImpl.LANG_ATTR_ID, "language");
         }
         if (entity.getId().startsWith("uid=") || entity.getId().startsWith("cn=")) {
-            properties.setProperty(LDAPUserInfoImpl.IS_ENTITY_ID_DN, "true");
+            properties.setProperty(LDAPUserInfoImpl.ENTITY_ID_DN, "true");
         }
         UserInfo ldapUserInfo = new LDAPUserInfoImpl(properties);
 
